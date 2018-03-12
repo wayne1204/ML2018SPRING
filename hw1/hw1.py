@@ -40,13 +40,13 @@ for month in range(12):
 				if raw_data[toxic][480*month+hour+i] > 5*r_mu[toxic] :
 					new_row.append(r_mu[toxic])
 				elif raw_data[toxic][480*month+hour+i] <0 :
-					new_row.append(0)
+					new_row.append(r_mu[toxic])
 				else:
 				    new_row.append( raw_data[toxic][480*month + hour + i])
 		if raw_data[9][480*month+hour+9] > 5*r_mu[9] :
 			Y.append(r_mu[9])
 		elif raw_data[9][480*month+hour+9] <0 :
-			Y.append(0)
+			Y.append(r_mu[9])
 		else:
 			Y.append( raw_data[9][480*month+hour+9])
 		X.append(new_row)
@@ -74,9 +74,9 @@ X = np.concatenate( (np.ones((X.shape[0],1)), X) , axis=1)
 
 # shuffling and splitting validation set
 all_size = X.shape[0]
-# randomize = np.arange(all_size)
-# np.random.shuffle(randomize)
-# X,Y = X[randomize], Y[randomize]
+randomize = np.arange(all_size)
+np.random.shuffle(randomize)
+X,Y = X[randomize], Y[randomize]
 
 valid_size = int(math.floor(all_size * 0.9))
 X_train, Y_train = X[0:valid_size], Y[0:valid_size]
@@ -96,7 +96,7 @@ beta1 = 0.9
 beta2 = 0.999
 first_moment = 0
 second_moment = 0
-regulation = 0.01
+regulation = 0.1
 e = math.pow(10, -8)
 
 for i in range(repeat):
@@ -144,7 +144,7 @@ for r in row:
         	if float(r[i]) >  5*r_mu[n_row%18]:
         		test_x[n_row//18].append(r_mu[n_row%18])
         	elif float(r[i]) <  0:
-        		test_x[n_row//18].append(0)
+        		test_x[n_row//18].append(r_mu[n_row%18])
         	else:
         		test_x[n_row//18].append(float(r[i]))
     else :
@@ -154,7 +154,7 @@ for r in row:
             elif float(r[i]) > 5*r_mu[n_row%18] :
             	test_x[n_row//18].append(r_mu[n_row%18])
             elif float(r[i]) < 0 :
-            	test_x[n_row//18].append(0) 
+            	test_x[n_row//18].append(r_mu[n_row%18])
             else:
                 test_x[n_row//18].append(float(r[i]))
     n_row = n_row+1
