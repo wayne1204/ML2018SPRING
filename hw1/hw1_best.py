@@ -67,7 +67,7 @@ for i in range(len(test_x)):
     a = np.dot(w,test_x[i])
     ans[i].append(a)
 
-filename = sys.argv[1]
+filename = sys.argv[2]
 text = open(filename, "w+")
 s = csv.writer(text,delimiter=',',lineterminator='\n')
 s.writerow(["id","value"])
