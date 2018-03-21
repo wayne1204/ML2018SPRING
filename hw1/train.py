@@ -87,15 +87,15 @@ X = np.concatenate((X, X**2), axis=1)
 X = np.concatenate( (np.ones((X.shape[0],1)), X) , axis=1)
 
 # =======shuffling and splitting validation set=======
-# all_size = X.shape[0]
-# randomize = np.arange(all_size)
-# np.random.shuffle(randomize)
-# X,Y = X[randomize], Y[randomize]
+all_size = X.shape[0]
+randomize = np.arange(all_size)
+np.random.shuffle(randomize)
+X,Y = X[randomize], Y[randomize]
 
-# valid_size = int(math.floor(all_size * 0.9))
-# X_train, Y_train = X[0:valid_size], Y[0:valid_size]
-# X_valid, Y_valid = X[valid_size:], Y[valid_size:]
-X_train, Y_train = X, Y
+valid_size = int(math.floor(all_size * 0.9))
+X_train, Y_train = X[0:valid_size], Y[0:valid_size]
+X_valid, Y_valid = X[valid_size:], Y[valid_size:]
+# X_train, Y_train = X, Y
 
 # start training
 print('start training...')
@@ -131,11 +131,11 @@ for i in range(repeat):
 # for i in range(18):
 #     print(np.sum(w[i*9: i*9+9]))
 
-# hypo = np.dot(X_valid, w)
-# loss = hypo - Y_valid
-# cost = np.sum(loss**2)/len(Y_valid)
-# cost_a = math.sqrt(cost) 
-# print( 'validation set Cost: %f' % cost_a)
+hypo = np.dot(X_valid, w)
+loss = hypo - Y_valid
+cost = np.sum(loss**2)/len(Y_valid)
+cost_a = math.sqrt(cost) 
+print( 'validation set Cost: %f' % cost_a)
 
 np.save('model.npy', w)
 
