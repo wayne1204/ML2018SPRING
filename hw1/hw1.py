@@ -5,7 +5,7 @@ import sys
 
 # loading parameter
 print('loading parameter...')
-w = np.load('model1.npy')
+w = np.load('model_best.npy')
 text = open('r_parameter.txt' ,"r")
 row = csv.reader(text , delimiter= ",")
 r_mu = []
@@ -40,7 +40,7 @@ for r in row:
     for i in range(2,11):
         if r[i] =="NR":
             test_x[n_row//18].append(0)
-        elif float(r[i]) > 4*r_mu[n_row%18] :
+        elif float(r[i]) > 5*r_mu[n_row%18] :
             test_x[n_row//18].append(r_mu[n_row%18])
         elif float(r[i]) < 0 :
             test_x[n_row//18].append(r_mu[n_row%18])
@@ -65,6 +65,7 @@ ans = []
 for i in range(len(test_x)):
     ans.append(["id_"+str(i)])
     a = np.dot(w,test_x[i])
+    a = a*sigma[162] + mu[162]
     ans[i].append(a)
 
 filename = sys.argv[2]
