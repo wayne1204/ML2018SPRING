@@ -31,7 +31,6 @@ text = open("r_parameter.txt", "w+")
 s = csv.writer(text,delimiter=',',lineterminator='\n')
 for i in range(len(r_mu)):
     s.writerow([r_mu[i], r_sigma[i]]) 
-# s.writerow([y_mean, y_std])
 text.close()
 
 
@@ -45,13 +44,13 @@ for month in range(12):
         new_row = []
         for toxic in range(18):
             for i in range(9):
-                if raw_data[toxic][480*month+hour+i] > 4*r_mu[toxic] :
+                if raw_data[toxic][480*month+hour+i] > 5*r_mu[toxic] :
                     new_row.append(r_mu[toxic])
                 elif raw_data[toxic][480*month+hour+i] <0 :
                     new_row.append(r_mu[toxic])
                 else:
                     new_row.append( raw_data[toxic][480*month + hour + i])
-        if raw_data[9][480*month+hour+9] > 4*r_mu[9] :
+        if raw_data[9][480*month+hour+9] > 5*r_mu[9] :
             Y.append(r_mu[9])
         elif raw_data[9][480*month+hour+9] <0 :
             Y.append(r_mu[9])
@@ -73,13 +72,14 @@ for i in range(X.shape[1]):
 
 y_mean = np.mean(Y, axis = 0, dtype=np.float64)
 y_std = np.std(Y, axis = 0, dtype=np.float64)
-# for i in range(Y.shape[0]):
-#     Y[i] = (Y[i] - y_mean)/ y_std
+for i in range(Y.shape[0]):
+    Y[i] = (Y[i] - y_mean)/ y_std
 
 text = open("parameter.txt", "w+")
 s = csv.writer(text,delimiter=',',lineterminator='\n')
 for i in range(len(mu)):
     s.writerow([mu[i], sigma[i]]) 
+s.writerow([y_mean, y_std])
 text.close()
 
 
@@ -92,15 +92,15 @@ randomize = np.arange(all_size)
 np.random.shuffle(randomize)
 X,Y = X[randomize], Y[randomize]
 
-valid_size = int(math.floor(all_size * 0.9))
+valid_size = int(math.floor(all_size * 0.8))
 X_train, Y_train = X[0:valid_size], Y[0:valid_size]
 X_valid, Y_valid = X[valid_size:], Y[valid_size:]
 # X_train, Y_train = X, Y
-
+# 
 # start training
 print('start training...')
 w = np.zeros(len(X_train[0]))
-l_rate = 0.01
+l_rate = 0.001
 repeat = 10000
 
 x_t = X_train.transpose()
@@ -117,7 +117,7 @@ for i in range(repeat):
     hypo = np.dot(X_train, w)
     loss = hypo - Y_train
     cost = np.sum(loss**2) / len(X_train)
-    cost_a  = math.sqrt(cost) 
+    cost_a  = math.sqrt(cost) * y_std
     gra = np.dot(x_t,loss) + regulation*w
 
     first_moment = beta1 * first_moment + (1 - beta1) * gra
@@ -134,7 +134,7 @@ for i in range(repeat):
 hypo = np.dot(X_valid, w)
 loss = hypo - Y_valid
 cost = np.sum(loss**2)/len(Y_valid)
-cost_a = math.sqrt(cost) 
+cost_a = math.sqrt(cost)*y_std 
 print( 'validation set Cost: %f' % cost_a)
 
 np.save('model.npy', w)
