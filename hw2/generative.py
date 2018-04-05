@@ -90,8 +90,6 @@ def correctness(X_valid, Y_valid, w ,b):
 
 	result = y - Y_valid
 	result = np.abs(result)
-	# for i in range(len(y)):
-	# 	print(result[i])
 	correct = 1 - float(np.sum(result)) / X_valid.shape[0]
 	return correct
 	
@@ -105,7 +103,7 @@ def prediction(testing_set, w, b):
 		ans.append([i+1])
 		ans[i].append(int(y[i]))
 
-	filename = 'predict3.csv'
+	filename = sys.argv[4]
 	text = open(filename, "w+")
 	s = csv.writer(text,delimiter=',',lineterminator='\n')
 	s.writerow(["id","label"])
@@ -114,9 +112,9 @@ def prediction(testing_set, w, b):
 	text.close()
 
 if __name__ == '__main__':
-	training_set = readingData('data/train_X')
-	testing_set = readingData('data/test_X')
-	training_label = readingLabel('data/train_Y')
+	training_set = readingData(sys.argv[1])
+	training_label = readingLabel(sys.argv[2])
+	testing_set = readingData(sys.argv[3])
 	# training_set, testing_set = standardize(training_set, testing_set)	
 	X_train, Y_train, X_valid, Y_valid = shuffle_split(training_set, training_label, 0.8)
 	mu1, mu2, count1, count2 = mean(X_train, Y_train)
