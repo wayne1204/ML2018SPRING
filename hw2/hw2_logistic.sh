@@ -1,4 +1,3 @@
-#!/bin/bash
-python3 logistic.py $3 $4 
+#!/bin/bash 
 python3 logistic_test.py $5 $6
 

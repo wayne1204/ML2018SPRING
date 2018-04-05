@@ -1,2 +1,3 @@
-#!/bin/bash
-python3 generative.py $3 $4 $5 $6
+#!/bin/bash 
+python3 logistic_test.py $5 $6
+
