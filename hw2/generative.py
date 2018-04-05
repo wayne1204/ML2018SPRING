@@ -2,15 +2,7 @@ import pandas as pd
 import numpy as np
 import math
 import csv
-
-
-# for i in range(200):
-# 	array = []
-# 	print('======= %i =======' % i)
-# 	for j in range(training_set.shape[1]):
-# 		if training_set[i][j] > 1:
-# 			array.append(str(j))
-# 	print(' '.join(array))
+import sys
 
 def readingData(path):
 	data = pd.read_csv(path)
@@ -68,6 +60,7 @@ def sigma(X_train, Y_train, mu1, mu2, cnt1, cnt2):
 	dim = X_train.shape[1]
 	sigma1 = np.zeros((dim, dim))
 	sigma2 = np.zeros((dim, dim))
+	print(X_train[0].shape, mu1.shape)
 	for i in range(len(X_train)):
 		if Y_train[i] == 1:
 			sigma1 += np.dot(np.transpose([X_train[i] - mu1]),[(X_train[i] - mu1)])
@@ -75,7 +68,7 @@ def sigma(X_train, Y_train, mu1, mu2, cnt1, cnt2):
 			sigma2 += np.dot(np.transpose([X_train[i] - mu2]),[(X_train[i] - mu2)])
 	sigma1 /= cnt1
 	sigma2 /= cnt2
-	share_sigma = (float(cnt1) / len(training_set)) * sigma1 + (float(cnt2) / len(training_set)) * sigma2
+	share_sigma = (float(cnt1) / len(X_train)) * sigma1 + (float(cnt2) / len(X_train)) * sigma2
 	return share_sigma
 
 
@@ -83,27 +76,30 @@ def sigmoid(z):
 	y = 1 / ( 1 + np.exp(-z))
 	return np.clip(y, 1e-8, 1-(1e-8))
 
-def validationScore(w,b,X_valid, Y_valid):
+def genModel(share_sigma, mu1, mu2, N1, N2):
+	sigma_inv = np.linalg.inv(share_sigma)
+	w = np.dot( (mu1-mu2), sigma_inv )
+	b = (-0.5) * np.dot(np.dot([mu1], sigma_inv), mu1) + 0.5 * np.dot(np.dot([mu2], sigma_inv), mu2) + math.log(N1/N2)
+	return w,b
+
+def correctness(X_valid, Y_valid, w ,b):
 	x = X_valid.T
 	a = np.dot(w,x) + b
-	y = sigmoid(a)
-	print(y)
-	y = np.around(y)
+	y = np.around(sigmoid(a))
+	y = y.reshape(len(y), 1)
 
 	result = y - Y_valid
 	result = np.abs(result)
+	# for i in range(len(y)):
+	# 	print(result[i])
 	correct = 1 - float(np.sum(result)) / X_valid.shape[0]
 	return correct
-
-def prediction(testing_set, share_sigma, mu1, mu2, N1, N2):
-	sigma_inv = np.linalg.inv(share_sigma)
-	x = testing_set.T
-	w = np.dot( (mu1-mu2), sigma_inv )
-	b = (-0.5) * np.dot(np.dot([mu1], sigma_inv), mu1) + 0.5 * np.dot(np.dot([mu2], sigma_inv), mu2)
-	a = np.dot(w,x) + b
-	y = sigmoid(a)
-	y = np.around(y)
 	
+def prediction(testing_set, w, b):
+	x = testing_set.T
+	a = np.dot(w,x) + b
+	y = np.around(sigmoid(a))
+
 	ans = []
 	for i in range(len(testing_set)):
 		ans.append([i+1])
@@ -116,19 +112,18 @@ def prediction(testing_set, share_sigma, mu1, mu2, N1, N2):
 	for i in range(len(ans)):
 	    s.writerow(ans[i]) 
 	text.close()
-	return w,b
-
 
 if __name__ == '__main__':
 	training_set = readingData('data/train_X')
 	testing_set = readingData('data/test_X')
 	training_label = readingLabel('data/train_Y')
-	training_set, testing_set = standardize(training_set, testing_set)	
-	X_train, Y_train, X_valid, Y_valid = shuffle_split(training_set, training_label, 0.9)
+	# training_set, testing_set = standardize(training_set, testing_set)	
+	X_train, Y_train, X_valid, Y_valid = shuffle_split(training_set, training_label, 0.8)
 	mu1, mu2, count1, count2 = mean(X_train, Y_train)
 	share_sigma = sigma(X_train, Y_train, mu1, mu2, count1, count2)	
-	w,b = prediction(testing_set, share_sigma, mu1, mu2, count1, count2)
-	print('correctness = %f' % validationScore(w,b,X_valid, Y_valid) )
+	w,b = genModel(share_sigma, mu1, mu2, count1, count2)
+	print('Score = %f | Validation_Score = %f' % (correctness(X_train, Y_train, w, b), 
+		correctness(X_valid, Y_valid, w, b)) )
+	prediction(testing_set, w, b)
 	
 
-	# prediction(testing_set, w, b)
