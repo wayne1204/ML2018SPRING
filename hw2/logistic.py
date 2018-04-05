@@ -33,8 +33,8 @@ def standardize(training_set, testing_set):
 	sigma_2 = np.tile(sigma, (testing_set.shape[0], 1))
 	training_set = (training_set - mu_1) / sigma_1
 	testing_set = (testing_set - mu_2) / sigma_2
-	# np.save('mu.npy',mu)
-	# np.save('sigma.npy',sigma)
+	np.save('mu.npy',mu)
+	np.save('sigma.npy',sigma)
 	return training_set, testing_set
 
 def shuffle_split(X_all, Y_all, percentage):
@@ -67,7 +67,7 @@ def prediction(testing_set, w, b):
 		ans.append([i+1])
 		ans[i].append(int(sigmoid_test[i][0]))
 
-	filename = 'predict_wo.csv'
+	filename = 'predict.csv'
 	text = open(filename, "w+")
 	s = csv.writer(text,delimiter=',',lineterminator='\n')
 	s.writerow(["id","label"])
@@ -127,15 +127,14 @@ def training(X_train, Y_train):
 			print('==============[epoch  %d]============== ' % ( epoch))
 			print('Total Lost %f | Score: %f | V_Score: %f' % ( total_loss,validationScore(X_train,Y_train, w, b), validationScore(X_valid,Y_valid, w, b)))
 
-	# np.save('model.npy',w)
-	# np.save('bias_term.npy',b)
+	np.save('model.npy',w)
+	np.save('bias_term.npy',b)
 	return w,b
 
 if __name__ == '__main__':
 	training_set = readingData('data/train_X')
 	testing_set = readingData('data/test_X')
 	training_label = readingLabel('data/train_Y')
-	# training_set, testing_set = standardize(training_set, testing_set)	
+	training_set, testing_set = standardize(training_set, testing_set)	
 	X_train, Y_train, X_valid, Y_valid = shuffle_split(training_set, training_label, 0.9)
 	w,b = training(X_train, Y_train)
-	prediction(testing_set, w, b)
