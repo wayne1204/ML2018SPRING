@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+# FileName     [ visualizeFilter.py ]
+# Date		   [ 2018.4 ]
+# Synopsis     [ visualize the output of filter in convolution layer]
+
 import csv
 import os
 import pickle

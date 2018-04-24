@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-# -- coding: utf-8 --
+# FileName     [ saliency.py ]
+# Date		   [ 2018.4 ]
+# Synopsis     [ plot saliency map ]
 
 import os
 import argparse

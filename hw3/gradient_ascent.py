@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+# FileName     [ gradient_ascent.py ]
+# Date		   [ 2018.4 ]
+# Synopsis     [ use gradient ascent methods to visualize input of filter ]
+
 
 import os
 import pickle

@@ -1,3 +1,8 @@
+# FileName     [ confusion.py ]
+# Date		   [ 2018.4]
+# Synopsis     [ plot confusion matrix]
+
+
 import pandas as pd
 import numpy as np
 import csv
