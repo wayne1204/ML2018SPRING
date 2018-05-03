@@ -5,10 +5,10 @@ import os
 
 def readFile(imagePath):
     images = []
-    # for i in range(415):
-    for f in os.listdir(imagePath):
-        # filename = ('./data/Aberdeen/' + str(i) + '.jpg')
-        filename = os.path.join(imagePath, f)
+    for i in range(415):
+    # for f in os.listdir(imagePath):
+        filename = (imagePath +'/' + str(i) + '.jpg')
+        # filename = os.path.join(imagePath, f)
         print(filename)
         picture = io.imread(filename)
         picture = np.reshape(picture, 1080000)
@@ -58,16 +58,14 @@ def reconstruct(images, index):
     S = np.diag(w)
    
     u_ = u[:, :4].dot(S[:4, :4])
-    eigen = v[:4, :]
+    eigen = v[0:4]
     Recon = u_.dot(eigen) + mean
     print(Recon.shape)
-    fileName = 'eigenface' + index + '.jpg'   
-    saveImage(fileName, Recon[int(index)])
+    saveImage('reconstruction.jpg', Recon[int(index)-1])
 
     
 if __name__ == '__main__':   
     images = readFile(sys.argv[1])
-    averageFace(images)
     eigenFace(images)
     selected = sys.argv[2].split('.')[0]
     reconstruct(images, selected)
