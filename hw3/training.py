@@ -3,8 +3,6 @@ import numpy as np
 import csv
 import math
 import sys
-import matplotlib.pyplot as plt
-
 
 from keras.models import Sequential, load_model
 from keras.layers import Dense,Dropout, Flatten, Activation
@@ -14,8 +12,6 @@ from keras.optimizers import SGD, RMSprop, Adam
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-
-
 
 def parsingData(path):
 	print('=== parsing file from %s ===' % path)
@@ -127,7 +123,7 @@ if __name__ == '__main__':
 	training_set = parsingData(filename)
 	training_label = parsingLabel(filename)
 	training_set = scaling(training_set)
-	testing_set = scaling(testing_set)
+	# testing_set = scaling(testing_set)
 	
 	training_set, training_label, validation_set, validation_label = shuffle_split(training_set, training_label, 0.9)
 	training(training_set, training_label, validation_set, validation_label)

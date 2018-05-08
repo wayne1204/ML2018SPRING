@@ -6,10 +6,10 @@ import sys
 
 from keras.models import Sequential, load_model
 import itertools
-import matplotlib.pyplot as plt
-from sklearn import svm, datasets
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
+# import matplotlib.pyplot as plt
+# from sklearn import svm, datasets
+# from sklearn.model_selection import train_test_split
+# from sklearn.metrics import confusion_matrix
 
 def parsingData(path):
 	print('=== parsing file from %s ===' % path)
