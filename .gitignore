@@ -1,0 +1,12 @@
+# picture
+*.png
+*.jpg
+
+# data set
+*.csv
+*.txt
+*.h5
+
+# model 
+*.npy
+*.pkl
