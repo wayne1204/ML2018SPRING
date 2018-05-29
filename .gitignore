@@ -10,3 +10,8 @@
 # model 
 *.npy
 *.pkl
+*.bin
+
+final/data/audio_train
+final/data/audio_test
+hw5/model
