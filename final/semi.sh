@@ -1,0 +1,1 @@
+python3 src/semi.py semi
